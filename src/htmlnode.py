@@ -28,16 +28,29 @@ class LeafNode(HTMLNode):
             raise ValueError
         if not self.tag:
             return f"{self.value}"
-        out = f"<{self.tag}"
-        if not self.props:
-            out += f">{self.value}</{self.tag}>"
-        else:
-            # finish this?
-            out1 = ""
-            for prop in self.props:
-                out1 += f' {prop}="{self.props[prop]}"'
-            out += f"{out1}>{self.value}</{self.tag}>"
-
-        return out
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
     def __repr__(self):
         return f"HTMLNode({self.tag}, {self.value}, {self.props})"
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag=None, children=None, props=None):
+        self.tag = tag
+        self.children = children
+        self.props = props
+
+    def to_html(self):
+        if not self.tag:
+            raise ValueError
+        if not self.children:
+            raise ValueError
+        # recursive method 
+        out = f"<{self.tag}>"
+        for child in self.children:
+            if type(child) == LeafNode:
+                out += child.to_html()
+            if type(child) == ParentNode:
+                out += child.to_html()
+        out += f"</{self.tag}>"
+        return out
+        
+
