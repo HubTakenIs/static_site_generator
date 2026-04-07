@@ -26,16 +26,16 @@ class TextNode():
 def text_node_to_html_node(text_node):
     match text_node.text_type:
         case TextType.TEXT:
-            return LeafNode(None,value=text_node.text)
+            return LeafNode(None, text_node.text)
         case TextType.BOLD:
-            pass
+            return LeafNode("b", text_node.text)
         case TextType.ITALIC:
-            pass
+            return LeafNode("i", text_node.text)
         case TextType.CODE:
-            pass
+            return LeafNode("code", text_node.text)
         case TextType.LINK:
-            pass
+            return LeafNode("a", text_node.text, {"href":text_node.url})
         case TextType.IMAGE:
-            pass
+            return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
         case _:
             raise Exception("Unrecognised Text Type")
