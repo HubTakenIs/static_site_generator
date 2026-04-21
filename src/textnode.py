@@ -47,13 +47,16 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if old_node.text_type is not TextType.TEXT:
             out.append(old_node)
             continue
-        split = old_node.text.split(delimiter, 2)
-        if len(split) == 3:
-            nodes = [
-                    TextNode(split[0], TextType.TEXT),
-                    TextNode(split[1], text_type),
-                    TextNode(split[2], TextType.TEXT),]
-            out.extend(nodes)
-        else:
-            raise expection("invalid markdown syntax")
+        split_nodes = []
+        split = old_node.text.split(delimiter)
+        if len(split) % 2 == 0:
+            raise ValueError("invalid markdown, formatted section not closed")
+        for i in range(len(split)):
+            if split[i] == "":
+                continue
+            if i % 2 == 0:
+                split_nodes.append(TextNode(split[i], TextType.TEXT))
+            else:
+                split_nodes.append(TextNode(split[i], text_type))
+        out.extend(split_nodes)
     return out
