@@ -37,7 +37,30 @@ def extract_markdown_links(text):
     return matches
 
 def split_nodes_image(old_nodes):
-    pass
+    out = []
+    for old_node in old_nodes:
+        if old_node.text_type is not TextType.IMAGE:
+            out.append(old_node)
+            continue
+        if not old_node.text:
+            continue
+        split_nodes = []
+        matches = extract_markdown_links(old_node.text)
+        # error handling for matches. as it can be empty
+        sections = old_node.text.split(f"![{match[0]}]({match[1]})",1)
+        while len(sections) == 3:
+            # sec1 is before image, sec2 is image, sec3 is after image
+            nodes = [TextNode(section[0],TextType.TEXT),
+                     TextNode(section[1], TextType.IMAGE),
+                    ]
+            split_nodes.extend(nodes)
+            sections = section[2].split(f"![{match[0]}]({match[1]})",1)
+        split_nodes.append(sections,TextType.TEXT)
+        out.extend(split_nodes)
+
+
+
+    return out
 
 def split_nodes_link(old_nodes):
     pass
