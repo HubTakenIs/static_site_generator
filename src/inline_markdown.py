@@ -39,29 +39,44 @@ def extract_markdown_links(text):
 def split_nodes_image(old_nodes):
     out = []
     for old_node in old_nodes:
-        if old_node.text_type is not TextType.IMAGE:
+        if old_node.text_type != TextType.TEXT:
+            out.append(old_node)
+        # can fail
+        extracts = extract_markdown_images(old_node.text)
+        if not extracts:
             out.append(old_node)
             continue
-        if not old_node.text:
-            continue
-        split_nodes = []
-        matches = extract_markdown_links(old_node.text)
-        # error handling for matches. as it can be empty
-        sections = old_node.text.split(f"![{match[0]}]({match[1]})",1)
-        while len(sections) == 3:
-            # sec1 is before image, sec2 is image, sec3 is after image
-            nodes = [TextNode(section[0],TextType.TEXT),
-                     TextNode(section[1], TextType.IMAGE),
-                    ]
-            split_nodes.extend(nodes)
-            sections = section[2].split(f"![{match[0]}]({match[1]})",1)
-        split_nodes.append(sections,TextType.TEXT)
-        out.extend(split_nodes)
-
-
+        text_to_split = old_node.text
+        for image in extracts:
+            split = text_to_split.split(f"![{image[0]}]({image[1]})", 1)
+            if split[0]:
+                out.append(TextNode(split[0],TextType.TEXT))
+            out.append(TextNode(image[0],TextType.IMAGE, image[1]))
+            text_to_split = split[1]
+        if text_to_split:
+            out.append(TextNode(text_to_split, TextType.TEXT))
 
     return out
 
-def split_nodes_link(old_nodes):
-    pass
+def split_nodes_link(old_nodes): 
+    out = []
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            out.append(old_node)
+        # can fail.
+        extracts = extract_markdown_links(old_node.text)
+        if not extracts:
+            out.append(old_node)
+            continue
+        text_to_split = old_node.text
+        for link in extracts:
+            split = text_to_split.split(f"[{link[0]}]({link[1]})", 1)
+            if split[0]:
+                out.append(TextNode(split[0],TextType.TEXT))
+            out.append(TextNode(link[0],TextType.LINK, link[1]))
+            text_to_split = split[1]
+        if text_to_split:
+            out.append(TextNode(text_to_split, TextType.TEXT))
+
+    return out
 
