@@ -137,8 +137,6 @@ class TestInlineMarkdown(unittest.TestCase):
                 TextNode(" and a ", TextType.TEXT),
                 TextNode("link", TextType.LINK, "https://boot.dev"),]
         actual_output = text_to_textnodes(text)
-        print(expected_output)
-        print(actual_output)
         self.assertEqual(expected_output, actual_output)
 
 
