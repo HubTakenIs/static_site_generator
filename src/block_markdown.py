@@ -31,22 +31,23 @@ def block_to_block_type(markdown_block):
     split = markdown_block.split("\n")
 
     #if quote
-    if block.startswith("> "):
+    if markdown_block.startswith("> "):
         for line in split:
             if not line.startswith("> "):
                 return BlockType.PARAGRAPH
         return BlockType.QUOTE
     # if list
-    if block.startswith("- "):
+    if markdown_block.startswith("- "):
         for line in split:
             if not line.startswith("- "):
                 return BlockType.PARAGRAPH
         return BlockType.UNORDERED_LIST
     # if list
     counter = 1
-    if block.startswith(f"{counter}. "):
+    if markdown_block.startswith(f"{counter}. "):
         for line in split:
             if not line.startswith(f"{counter}. "):
                 return BlockType.PARAGRAPH
             counter += 1
         return BlockType.ORDERED_LIST
+    return BlockType.PARAGRAPH
