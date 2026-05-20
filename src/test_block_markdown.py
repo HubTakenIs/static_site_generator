@@ -1,5 +1,5 @@
 import unittest
-from block_markdown import (markdown_to_blocks, BlockType, block_to_block_type)
+from block_markdown import (markdown_to_blocks, BlockType, block_to_block_type, markdown_to_html_node)
 
 class TestBlockMarkdown(unittest.TestCase):
 
@@ -67,7 +67,14 @@ This is the same paragraph on a new line
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), BlockType.PARAGRAPH)
 
+    def test_headings(self):
+        md = """ ### this is a h3 heading as the people call it.
 
+
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        print(f"print html {html}")
 
 if __name__ == '__main__':
     unittest.main()

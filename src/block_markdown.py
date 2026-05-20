@@ -1,4 +1,6 @@
 from enum import Enum
+from htmlnode import ParentNode
+from textnode import TextNode, TextType, text_node_to_html_node
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph",
@@ -8,6 +10,30 @@ class BlockType(Enum):
     UNORDERED_LIST = "unordered_list",
     ORDERED_LIST = "ordered_list"
 
+
+def markdown_to_html_node(markdown):
+    # split code into blocks
+    blocks = markdown_to_blocks(markdown)
+    out = ParentNode("div",[])
+    # loop over blocks
+    for block in blocks:
+        block_type = block_to_block_type(block)
+        if block_type == BlockType.HEADING:
+            h_level = block.count("#")
+            # I need to extract title
+            text_node = TextNode(block[3:],TextType.TEXT )
+            node = ParentNode(f"h{h_level}",[text_node_to_html_node(text_node)])
+
+            out.children.append(node)
+    return out
+
+    # determine block type and create a htmlnode to represent it
+    # assign proper html node children to block nodes.
+    # make sure all block nodes are children of a div and return div.
+
+def text_to_children(text):
+    # string of text to list of htmlnodes that represent inline markdown 
+    pass
 
 def markdown_to_blocks(markdown):
     sections = markdown.split("\n\n")
