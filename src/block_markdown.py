@@ -1,6 +1,7 @@
 from enum import Enum
 from htmlnode import ParentNode
 from textnode import TextNode, TextType, text_node_to_html_node
+from inline_markdown import text_to_textnodes
 
 class BlockType(Enum):
     PARAGRAPH = "paragraph",
@@ -25,6 +26,10 @@ def markdown_to_html_node(markdown):
             node = ParentNode(f"h{h_level}",[text_node_to_html_node(text_node)])
 
             out.children.append(node)
+        if block_type == BlockType.PARAGRAPH:
+            text_nodes = text_to_textnodes(block)
+            node = ParentNode("p",text_nodes)
+        
     return out
 
     # determine block type and create a htmlnode to represent it
