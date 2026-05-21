@@ -20,15 +20,26 @@ def markdown_to_html_node(markdown):
     for block in blocks:
         block_type = block_to_block_type(block)
         if block_type == BlockType.HEADING:
-            h_level = block.count("#")
+            h_count = 0
+            for char in block:
+                if char != "#":
+                    break
+                h_count +=1
+            
             # I need to extract title
-            text_node = TextNode(block[3:],TextType.TEXT )
-            node = ParentNode(f"h{h_level}",[text_node_to_html_node(text_node)])
-
+            text_node = TextNode(block[h_count+1:],TextType.TEXT )
+            print(f"heading count {h_count}, text = {block[h_count+1:]}")
+            print(text_node)
+            node = ParentNode(f"h{h_count}",[text_node_to_html_node(text_node)])
             out.children.append(node)
+
         if block_type == BlockType.PARAGRAPH:
             text_nodes = text_to_textnodes(block)
-            node = ParentNode("p",text_nodes)
+            child_nodes = []
+            for text_node in text_nodes:
+                child_nodes.append(text_node_to_html_node(text_node))
+            node = ParentNode("p",child_nodes)
+            out.children.append(node)
         
     return out
 

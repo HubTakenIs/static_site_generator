@@ -69,12 +69,19 @@ This is the same paragraph on a new line
 
     def test_headings(self):
         md = """ ### this is a h3 heading as the people call it.
-
-
         """
         node = markdown_to_html_node(md)
+        print(f"node from markdown_to_html_node: {node}")
         html = node.to_html()
         print(f"print html {html}")
 
+    # def test_paragraph(self):
+    #     md = """this is an paragraph with **bob** as the people call it.
+
+
+    #     """
+    #     node = markdown_to_html_node(md)
+    #     html = node.to_html()
+    #     print(f"print html {html}")
 if __name__ == '__main__':
     unittest.main()
