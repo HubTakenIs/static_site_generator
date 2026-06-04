@@ -40,6 +40,15 @@ def markdown_to_html_node(markdown):
                 child_nodes.append(text_node_to_html_node(text_node))
             node = ParentNode("p",child_nodes)
             out.children.append(node)
+        if block_type == BlockType.CODE:
+            pass
+        if block_type == BlockType.Quote:
+            pass
+        if block_type == BlockType.UNORDERED_LIST:
+            pass
+        if block_type == BlockType.ORDERED_LIST:
+            pass
+
         
     return out
 
