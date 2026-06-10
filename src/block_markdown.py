@@ -20,35 +20,19 @@ def markdown_to_html_node(markdown):
     for block in blocks:
         block_type = block_to_block_type(block)
         if block_type == BlockType.HEADING:
-            h_count = 0
-            for char in block:
-                if char != "#":
-                    break
-                h_count +=1
-            
-            # I need to extract title
-            text_node = TextNode(block[h_count+1:],TextType.TEXT )
-            print(f"heading count {h_count}, text = {block[h_count+1:]}")
-            print(text_node)
-            node = ParentNode(f"h{h_count}",[text_node_to_html_node(text_node)])
-            out.children.append(node)
-
-        if block_type == BlockType.PARAGRAPH:
-            text_nodes = text_to_textnodes(block)
-            child_nodes = []
-            for text_node in text_nodes:
-                child_nodes.append(text_node_to_html_node(text_node))
-            node = ParentNode("p",child_nodes)
-            out.children.append(node)
-        if block_type == BlockType.CODE:
             pass
-        if block_type == BlockType.Quote:
+        elif block_type == BlockType.CODE:
             pass
-        if block_type == BlockType.UNORDERED_LIST:
+        elif block_type == BlockType.ORDERED_LIST:
             pass
-        if block_type == BlockType.ORDERED_LIST:
+        elif block_type == BlockType.UNORDERED_LIST:
             pass
-
+        elif block_type == BlockType.QUOTE:
+            pass
+        elif block_type == BlockType.PARAGRAPH:
+            pass
+        else:
+            # something went wrong
         
     return out
 
@@ -58,7 +42,12 @@ def markdown_to_html_node(markdown):
 
 def text_to_children(text):
     # string of text to list of htmlnodes that represent inline markdown 
-    pass
+    out = []
+    text_nodes = text_to_textnodes(text)
+    for text_node in text_nodes:
+        html_node = text_node_to_html_node(text_node)
+        out.append(html_node)
+    return out
 
 def markdown_to_blocks(markdown):
     sections = markdown.split("\n\n")
