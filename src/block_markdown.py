@@ -20,7 +20,11 @@ def markdown_to_html_node(markdown):
     for block in blocks:
         block_type = block_to_block_type(block)
         if block_type == BlockType.HEADING:
-            pass
+            count = 0
+            for char in block:
+                if char == "#":
+                    count += 1
+
         elif block_type == BlockType.CODE:
             pass
         elif block_type == BlockType.ORDERED_LIST:
