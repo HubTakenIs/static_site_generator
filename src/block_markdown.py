@@ -24,6 +24,10 @@ def markdown_to_html_node(markdown):
             for char in block:
                 if char == "#":
                     count += 1
+            children = text_to_children(block[count+1:])
+            parent = ParentNode(f"h{count}",children)
+            out.children.append(parent)
+            continue
 
         elif block_type == BlockType.CODE:
             pass
@@ -32,12 +36,16 @@ def markdown_to_html_node(markdown):
         elif block_type == BlockType.UNORDERED_LIST:
             pass
         elif block_type == BlockType.QUOTE:
-            pass
+            text = block.removeprefix("> ")
+            children = text_to_children(text)
+            parent = ParentNode(f"blockquote", children)
+            out.children.append(parent)
+            continue
         elif block_type == BlockType.PARAGRAPH:
             pass
         else:
             # something went wrong
-        
+            pass
     return out
 
     # determine block type and create a htmlnode to represent it
