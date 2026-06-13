@@ -1,5 +1,5 @@
 from enum import Enum
-from htmlnode import ParentNode
+from htmlnode import ParentNode, LeafNode
 from textnode import TextNode, TextType, text_node_to_html_node
 from inline_markdown import text_to_textnodes
 
@@ -30,9 +30,21 @@ def markdown_to_html_node(markdown):
             continue
 
         elif block_type == BlockType.CODE:
-            pass
+            text = block.removeprefix("```").removesuffix("```")
+            code = LeafNode("code",text)
+            pre = ParentNode("pre",[code])
+            out.children.append(pre)
+            continue
+
         elif block_type == BlockType.ORDERED_LIST:
-            pass
+            split = block.split("\n")
+            count = 1
+            for line in split:
+                if line.startswith(f"{count}. "):
+                    text = line.removesuffix(f"{count}. ")
+                    #parent node li
+            parent = ParentNode("ol")
+
         elif block_type == BlockType.UNORDERED_LIST:
             pass
         elif block_type == BlockType.QUOTE:
@@ -41,8 +53,12 @@ def markdown_to_html_node(markdown):
             parent = ParentNode(f"blockquote", children)
             out.children.append(parent)
             continue
+
         elif block_type == BlockType.PARAGRAPH:
-            pass
+            children = text_to_textnodes(block)
+            parent = ParentNode("p",children)
+            out.children.append(parent)
+            continue
         else:
             # something went wrong
             pass
