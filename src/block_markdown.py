@@ -31,12 +31,14 @@ def markdown_to_html_node(markdown):
 
         elif block_type == BlockType.CODE:
             text = block.removeprefix("```").removesuffix("```")
-            code = LeafNode("code",text)
+            # left new line
+            code = LeafNode("code",text[1:])
             pre = ParentNode("pre",[code])
             out.children.append(pre)
             continue
 
         elif block_type == BlockType.ORDERED_LIST:
+            # needs a tests
             split = block.split("\n")
             count = 1
             line_items = []
@@ -53,6 +55,7 @@ def markdown_to_html_node(markdown):
             continue
 
         elif block_type == BlockType.UNORDERED_LIST:
+            # needs a test
             split = block.split("\n")
             line_items = []
             for line in split:
@@ -74,8 +77,11 @@ def markdown_to_html_node(markdown):
             continue
 
         elif block_type == BlockType.PARAGRAPH:
-            children = text_to_textnodes(block)
-            parent = ParentNode("p",children)
+            children = text_to_textnodes(block.replace("\n", " "))
+            html_children = []
+            for child in children:
+                html_children.append(text_node_to_html_node(child))
+            parent = ParentNode("p",html_children)
             out.children.append(parent)
             continue
         else:
