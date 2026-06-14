@@ -70,10 +70,11 @@ def markdown_to_html_node(markdown):
             continue
 
         elif block_type == BlockType.QUOTE:
-            text = block.removeprefix("> ")
+            lines = block.split("\n")
+            stripped = [line.lstrip(">").strip() for line in lines]
+            text = " ".join(stripped)
             children = text_to_children(text)
-            parent = ParentNode(f"blockquote", children)
-            out.children.append(parent)
+            out.children.append(ParentNode("blockquote", children))
             continue
 
         elif block_type == BlockType.PARAGRAPH:
