@@ -39,14 +39,33 @@ def markdown_to_html_node(markdown):
         elif block_type == BlockType.ORDERED_LIST:
             split = block.split("\n")
             count = 1
+            line_items = []
             for line in split:
                 if line.startswith(f"{count}. "):
-                    text = line.removesuffix(f"{count}. ")
-                    #parent node li
-            parent = ParentNode("ol")
+                    text = line.removeprefix(f"{count}. ")
+                    line_children = text_to_children(text)
+                    line_item = ParentNode("li", children=line_children)
+                    line_items.append(line_item)
+                    count +=1
+
+            parent = ParentNode("ol",line_items)
+            out.children.append(parent)
+            continue
 
         elif block_type == BlockType.UNORDERED_LIST:
-            pass
+            split = block.split("\n")
+            line_items = []
+            for line in split:
+                if line.startswith(f"- "):
+                    text = line.removeprefix(f"- ")
+                    line_children = text_to_children(text)
+                    line_item = ParentNode("li", children=line_children)
+                    line_items.append(line_item)
+
+            parent = ParentNode("ul",line_items)
+            out.children.append(parent)
+            continue
+
         elif block_type == BlockType.QUOTE:
             text = block.removeprefix("> ")
             children = text_to_children(text)
