@@ -45,5 +45,7 @@ def copy_static():
             shutil.copy(src, destination)
         else:
             shutil.copytree(src, destination)
+def generate_page(from_path, template_path, dest_path):
+    pass
 
 main()
