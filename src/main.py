@@ -46,6 +46,20 @@ def copy_static():
         else:
             shutil.copytree(src, destination)
 def generate_page(from_path, template_path, dest_path):
-    pass
+    # print message
+    # read file at from_path
+    # read template at template_path
+    # convert markdown to html
+    # extract title
+    # replace title and content in template
+    # write new html page at dest_path
+
+def extract_title(markdown):
+    text = ""
+    if markdown.startswith("# "):
+        text = markdown.replace("# ", "").split("\n\n",1)[0]
+    if not text:
+        raise Exception("No Title")
+    return text
 
 main()
