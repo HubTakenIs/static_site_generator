@@ -16,6 +16,9 @@ def main():
     destination = os.path.abspath("public/index.html")
     generate_page(from_path, template_path, destination)
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    pass
+
 def copy_static():
     # copy all of static files to public
     # check if path exists, create public if it doesn't. delete public and re-create it if it does
