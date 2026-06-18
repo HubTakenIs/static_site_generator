@@ -127,7 +127,7 @@ def block_to_block_type(markdown_block):
     #if quote
     if markdown_block.startswith("> "):
         for line in split:
-            if not line.startswith("> "):
+            if not line.startswith(">"):
                 return BlockType.PARAGRAPH
         return BlockType.QUOTE
     # if list

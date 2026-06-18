@@ -1,3 +1,4 @@
+from block_markdown import markdown_to_html_node
 from textnode import TextNode, TextType
 import os
 import shutil
@@ -10,6 +11,10 @@ import logging
 def main():
     print(f"main")
     copy_static()
+    from_path = os.path.abspath("content/index.md")
+    template_path = os.path.abspath("template.html")
+    destination = os.path.abspath("public/index.html")
+    generate_page(from_path, template_path, destination)
 
 def copy_static():
     # copy all of static files to public
@@ -45,14 +50,29 @@ def copy_static():
             shutil.copy(src, destination)
         else:
             shutil.copytree(src, destination)
+
 def generate_page(from_path, template_path, dest_path):
     # print message
+    print(f"Generating page from {from_path}, to {dest_path} using {template_path}")
     # read file at from_path
+    f = open(from_path)
+    from_path_file = f.read()
+    f.close()
     # read template at template_path
+    f = open(template_path)
+    template_file = f.read()
+    f.close()
     # convert markdown to html
+    html_content = markdown_to_html_node(from_path_file).to_html()
     # extract title
+    title = extract_title(from_path_file)
     # replace title and content in template
+    template_file = template_file.replace("{{ Title }}", title)
+    template_file = template_file.replace("{{ Content }}", html_content)
     # write new html page at dest_path
+    f = open(dest_path,"w")
+    f.write(template_file)
+    f.close()
 
 def extract_title(markdown):
     text = ""
@@ -62,4 +82,5 @@ def extract_title(markdown):
         raise Exception("No Title")
     return text
 
-main()
+if __name__ == "__main__":
+    main()
