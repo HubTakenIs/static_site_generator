@@ -11,13 +11,32 @@ import logging
 def main():
     print(f"main")
     copy_static()
-    from_path = os.path.abspath("content/index.md")
+    from_path = os.path.abspath("content")
     template_path = os.path.abspath("template.html")
-    destination = os.path.abspath("public/index.html")
-    generate_page(from_path, template_path, destination)
+    destination = os.path.abspath("public")
+    generate_pages_recursive(from_path, template_path, destination)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
-    pass
+    content_list = os.listdir(dir_path_content)
+    for content in content_list:
+        from_path = os.path.join(dir_path_content, content)
+        is_file = os.path.isfile(from_path)
+        if is_file:
+            destination = os.path.join(dest_dir_path, content.replace(".md", ".html"))
+            generate_page(from_path, template_path, destination)
+        else:
+            # check if directory in destination.
+            exists = os.path.isdir(
+                os.path.join(
+                    dest_dir_path, content
+                )
+            )
+            destination = os.path.join(dest_dir_path, content)
+            if exists:
+                generate_pages_recursive(from_path, template_path, destination)
+            else:
+                os.mkdir(destination)
+                generate_pages_recursive(from_path, template_path, destination)
 
 def copy_static():
     # copy all of static files to public
