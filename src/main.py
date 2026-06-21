@@ -12,7 +12,7 @@ import sys
 def main():
     print(f"main")
     base_url = ""
-    if len(sys.argv) >= 1 :
+    if len(sys.argv) == 1 :
         base_url = "/"
     else:
         base_url = sys.argv[1]
@@ -101,6 +101,7 @@ def generate_page(from_path, template_path, dest_path, base_url):
     # replace title and content in template
     template_file = template_file.replace("{{ Title }}", title)
     template_file = template_file.replace("{{ Content }}", html_content)
+    print(f"\n\n BASE URL INSIDE GENERATE PAGE \n\n {base_url}\n\n")
     template_file = template_file.replace('href="/',f'href="{base_url}')
     template_file = template_file.replace('src="/',f'src="{base_url}')
     # write new html page at dest_path
